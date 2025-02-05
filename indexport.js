@@ -50,6 +50,16 @@ document.querySelectorAll(".card-container").forEach((card) => {
     });
   });
 });
+
+// Fermer le menu mobile après clic sur un lien
+document.querySelectorAll("#navbarNav .nav-link").forEach((link) => {
+  link.addEventListener("click", () => {
+    const navbar = document.getElementById("navbarNav");  
+    if (navbar.classList.contains("show")) {          // Vérifier si le menu est ouvert
+      new bootstrap.Collapse(navbar).hide();       // Fermer le menu
+    }
+  });
+});
 // ***** Annimer avec particles.js ******
 document.addEventListener("DOMContentLoaded", function () {
   particlesJS("particles-js", {
@@ -62,10 +72,10 @@ document.addEventListener("DOMContentLoaded", function () {
         },
       },
       color: {
-        value: "#3498db", // Couleur des particules 
+        value: "#3498db", // Couleur des particules
       },
       shape: {
-        type: "circle", // Forme des particules 
+        type: "circle", // Forme des particules
       },
       opacity: {
         value: 0.2, // Opacité des particules
@@ -150,13 +160,13 @@ document
     event.preventDefault(); // Empêcher l'envoi du formulaire
 
     // Récupérer les valeurs des champs
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
+    const name = document.getElementById("name").value;  
+    const email = document.getElementById("email").value;   
     const message = document.getElementById("message").value;
 
     // Valider l'e-mail
     if (!validateEmail(email)) {
-      alert("Veuillez entrer une adresse e-mail valide !");
+      alert("Veuillez entrer une adresse e-mail valide !");    // Message d'erreur si l'e-mail n'est pas valide
       return;
     }
 
