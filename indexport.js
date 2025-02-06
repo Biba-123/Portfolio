@@ -54,9 +54,10 @@ document.querySelectorAll(".card-container").forEach((card) => {
 // Fermer le menu mobile après clic sur un lien
 document.querySelectorAll("#navbarNav .nav-link").forEach((link) => {
   link.addEventListener("click", () => {
-    const navbar = document.getElementById("navbarNav");  
-    if (navbar.classList.contains("show")) {          // Vérifier si le menu est ouvert
-      new bootstrap.Collapse(navbar).hide();       // Fermer le menu
+    const navbar = document.getElementById("navbarNav");
+    if (navbar.classList.contains("show")) {
+      // Vérifier si le menu est ouvert
+      new bootstrap.Collapse(navbar).hide(); // Fermer le menu
     }
   });
 });
@@ -68,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
         value: 100, // Nombre de particules
         density: {
           enable: true, // Activer la densité des particules
-          value_area: 700, // Zone de dispersion
+          value_area: 600, // Zone de dispersion
         },
       },
       color: {
@@ -124,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // **** Initialiser Swiper.js pour la section Expériencess ****
 document.addEventListener("DOMContentLoaded", function () {
-  const swiper = new swiper("#experiences-swiper", {
+  const swiper = new Swiper("#experiences-swiper", {
     loop: true, // Permet de boucler les slides
     navigation: {
       nextEl: ".experiences-button-next", // Bouton suivant avec une classe unique
@@ -138,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
       delay: 3000, // Défilement automatique toutes les 3 secondes
     },
     slidesPerView: 1, // Affiche 1 seul slide
-    sliddesPerGroup: 1, // Défilement d'un seul slide
+    slidesPerGroup: 1, // Défilement d'un seul slide
   });
 });
 // ******** section contact ***************
@@ -160,13 +161,13 @@ document
     event.preventDefault(); // Empêcher l'envoi du formulaire
 
     // Récupérer les valeurs des champs
-    const name = document.getElementById("name").value;  
-    const email = document.getElementById("email").value;   
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
     const message = document.getElementById("message").value;
 
     // Valider l'e-mail
     if (!validateEmail(email)) {
-      alert("Veuillez entrer une adresse e-mail valide !");    // Message d'erreur si l'e-mail n'est pas valide
+      alert("Veuillez entrer une adresse e-mail valide !"); // Message d'erreur si l'e-mail n'est pas valide
       return;
     }
 
