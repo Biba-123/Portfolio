@@ -96,10 +96,11 @@ document.addEventListener("DOMContentLoaded", function () {
         random: true, // Direction aléatoire
         straight: false, // Déplacement en ligne droite
         out_mode: "out", // Sortie de la zone de détection
+        bounce: false, // Rebondir sur les bords
       },
     },
     interactivity: {
-      detect_on: "", // Zone de détection des événements
+      detect_on: "canvas", // Zone de détection des événements
       events: {
         onhover: {
           enable: true,
@@ -108,9 +109,21 @@ document.addEventListener("DOMContentLoaded", function () {
         onclick: {
           enable: true, // Activer l'ajout de particules au clic
           mode: "push", // Ajoute des particules au clic
+          resize: true, // Redimensionne le canvas au clic
         },
       },
       modes: {
+        grap: {
+          distance: 100, // Distance de liaison entre les particules
+          line_linked: {
+            opacity: 1, // Opacité des lignes
+          },
+        },
+        bubble: {
+          distance: 200, // Distance de création des particules
+          size: 80, // Taille des particules
+          duration: 0.5, // Durée de l'effet en secondes
+        },
         repulse: {
           distance: 90, // Distance d'éloignement des particules au survol
           duration: 0.4, // Durée de l'effet en secondes
@@ -142,74 +155,89 @@ document.addEventListener("DOMContentLoaded", function () {
     slidesPerGroup: 1, // Défilement d'un seul slide
   });
 });
-// ******** section contact ***************
+// ******** section contact gérer le formulaire ***************
+
 // Fonction pour valider le format de l'e-mail
 function validateEmail(email) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expression pour valider l'e-mail saisi par l'utilisateur
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
 
 // Fonction pour compter les mots dans le message
 function countWords(text) {
-  return text.split(/\s+/).filter((word) => word.length > 0).length; // Pour compter les mots
+  return text.split(/\s+/).filter((word) => word.length > 0).length;
 }
 
-// Pour gérer le formulaire de contact
-document
-  .getElementById("contact-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // Empêcher l'envoi du formulaire
+// Gestion du formulaire de contact
+document.addEventListener("DOMContentLoaded", function () {
+  // Initialisation d'EmailJS avec votre User ID
+  emailjs.init("i4TDehtUAuwVdi5Qw");
 
-    // Récupérer les valeurs des champs
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const message = document.getElementById("message").value;
+  document
+    .getElementById("contact-form")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
 
-    // Valider l'e-mail
-    if (!validateEmail(email)) {
-      alert("Veuillez entrer une adresse e-mail valide !"); // Message d'erreur si l'e-mail n'est pas valide
-      return;
-    }
+      // Récupération des valeurs
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const message = document.getElementById("message").value;
 
-    // Valider la longueur du message
-    const wordCount = countWords(message);
-    if (wordCount > 200) {
-      alert("Le message ne doit pas dépasser 200 mots !"); // Message d'erreur si le message dépasse 200 mots
-      return;
-    }
+      // Validation de l'email
+      if (!validateEmail(email)) {
+        alert("Veuillez entrer une adresse e-mail valide !");
+        return;
+      }
 
-    // Afficher un message de succès ( test d'envoi)
-    alert("Message envoyé avec succès !");
-    console.log("Nom et Prénom :", name);
-    console.log("E-mail :", email);
-    console.log("Message :", message);
-  });
+      // Validation du nombre de mots
+      if (countWords(message) > 200) {
+        alert("Le message ne doit pas dépasser 200 mots !");
+        return;
+      }
 
-// Mettre à jour le compteur de mots en temps réel
-document.getElementById("message").addEventListener("input", function () {
-  const message = this.value; // Récupérer le contenu du champ de texte
-  const wordCount = countWords(message); // Compter les mots
-  document.getElementById("word-count").textContent = `${wordCount} / 200 mots`; // Afficher le nombre de mots
+      // Envoi avec EmailJS
+      emailjs
+        .sendForm(
+          "service_idrnohd", // Service ID
+          "template_qtdrkzf", // Template ID
+          this, // Référence au formulaire
+          "i4TDehtUAuwVdi5Qw" // User ID
+        )
+        .then((response) => {
+          alert("Message envoyé avec succès !");
+          this.reset(); // Réinitialisation du formulaire
+          document.getElementById("word-count").textContent = "0 / 200 mots";
+          document.getElementById("word-count").style.color = "gray";
+        })
+        .catch((error) => {
+          console.error("Erreur détaillée:", error);
+          alert(
+            `Erreur d'envoi: ${error.text || "Veuillez réessayer plus tard"}`
+          );
+        });
+    });
+});
 
-  // Changer la couleur du compteur si la limite est dépassée
-  if (wordCount > 200) {
-    document.getElementById("word-count").style.color = "red";
-  } else {
-    document.getElementById("word-count").style.color = "gray";
-  }
+// Gestion du compteur de mots
+document.getElementById("message").addEventListener("input", function () {    
+  const wordCount = countWords(this.value);   // Compter les mots
+  const counter = document.getElementById("word-count");   // Sélectionner le compteur
+
+  counter.textContent = `${wordCount} / 200 mots`;    // Afficher le nombre de mots
+  counter.style.color = wordCount > 200 ? "red" : "gray";  // Changer la couleur en rouge si le nombre de mots dépasse 200
 });
 
 //  Pour le bouton de retour en haut de la page
-document.addEventListener("DOMContentLoaded", function () {
-  const backToTopButton = document.querySelector("#back-to-top");
-  window.addEventListener("scroll", function () {
-    if (window.scrollY > 200) {
-      backToTopButton.classList.add("show");
+document.addEventListener("DOMContentLoaded", function () {   
+  const backToTopButton = document.querySelector("#back-to-top");   // Sélectionner le bouton
+  window.addEventListener("scroll", function () {    // scroll
+    if (window.scrollY > 200) {   // Vérifier la position
+      backToTopButton.classList.add("show");   // Ajouter la classe show
     } else {
-      backToTopButton.classList.remove("show");
+      backToTopButton.classList.remove("show");  
     }
   });
-  backToTopButton.addEventListener("click", function () {
-    window.scrollTo(0, 0);
+  backToTopButton.addEventListener("click", function () {   
+    window.scrollTo(0, 0);   // Retourner en haut de la page
   });
 });
